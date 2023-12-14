@@ -2,14 +2,26 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
     public GameObject gameOverText;
+    public TextMeshProUGUI scoreText;
     public bool gameOver = false;
     public float scrollSpeed = -1.5f;
+    private int score = 0;
+    AudioSource audioSource;
+    public AudioClip ScoreSounds;
+
+    private void Start()
+    {
+     audioSource = GetComponent<AudioSource>();
+    }
 
     // Start is called before the first frame update
     void Awake ()
@@ -33,9 +45,24 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void BirdScored()
+    {
+        if (gameOver)
+        {
+            return;
+        }
+        score++;
+        scoreText.text = "Score: " + score.ToString();
+        PlaySound(ScoreSounds);
+    }
+
     public void BirdDied()
     {
         gameOverText.SetActive(true);
         gameOver = true;
+    }
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
     }
 }
